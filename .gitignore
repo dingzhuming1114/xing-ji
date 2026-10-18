@@ -1,0 +1,6 @@
+node_modules/
+dist/
+.preview-browser/
+.qa/
+*.tar.gz
+.DS_Store

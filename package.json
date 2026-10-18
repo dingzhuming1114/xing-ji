@@ -1,0 +1,12 @@
+{
+  "name": "interstellar-particle-universe",
+  "version": "1.0.0",
+  "private": true,
+  "description": "无需依赖、可离线运行的交互式 WebGL 粒子星河",
+  "scripts": {
+    "dev": "node server.mjs",
+    "start": "node server.mjs",
+    "build": "node scripts/build.mjs",
+    "check": "node --check universe.js && node --check hand-controller.js && node --check gesture-worker.js && node --check server.mjs"
+  }
+}

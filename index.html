@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#060810">
+  <meta name="description" content="用四万颗发光粒子，构筑一片属于自己的星河。拖动旋转，切换星环与银河，让宇宙在指尖流转。">
+  <title>星际 · 在指尖，构筑宇宙</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23060810'/%3E%3Cellipse cx='32' cy='32' rx='27' ry='10' transform='rotate(-30 32 32)' fill='none' stroke='%2397baff' stroke-width='3'/%3E%3Ccircle cx='32' cy='32' r='10' fill='%23b3ceff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="universe.js"></script>
+  <script defer src="hand-controller.js"></script>
+</head>
+<body>
+  <canvas id="universe" aria-label="交互式粒子宇宙，拖动旋转，滚轮或双指缩放，双击释放星尘" tabindex="0"></canvas>
+  <div class="vignette" aria-hidden="true"></div>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="星际首页">
+      <svg class="brand-mark" viewBox="0 0 40 40" fill="none" aria-hidden="true"><circle cx="20" cy="20" r="8" stroke="currentColor"/><ellipse cx="20" cy="20" rx="19" ry="6.5" transform="rotate(-35 20 20)" stroke="currentColor"/><circle cx="34" cy="10" r="2" fill="currentColor"/></svg>
+      <span class="brand-name">星际<span class="brand-en">INTERSTELLAR</span></span>
+    </a>
+    <p class="header-note">在无垠之中，创造一点浪漫。</p>
+    <div class="header-actions">
+      <span class="live-indicator"><span></span>实时演算</span>
+      <button class="icon-button gesture-header" id="gesture-header" aria-label="启用手势控制" aria-pressed="false" title="手势控制 · 摄像头画面隐藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 13V6a1.5 1.5 0 0 1 3 0v5-7a1.5 1.5 0 0 1 3 0v7-5a1.5 1.5 0 0 1 3 0v6-3a1.5 1.5 0 0 1 3 0v7c0 4-2 6-6 6h-2c-2 0-3-1-4-3l-4-5c-1-2 1-3 2-2z"/></svg></button>
+      <button class="icon-button" id="capture" aria-label="保存星河图片" title="保存星河图片">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M8 5 9.5 3h5L16 5h4v15H4V5z"/><circle cx="12" cy="12" r="4"/></svg>
+      </button>
+      <button class="icon-button" id="fullscreen" aria-label="进入全屏" title="全屏 · F">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <div class="scene-heading">
+      <p class="eyebrow"><span id="scene-index">01</span><span class="short-line"></span>PARTICLE UNIVERSE</p>
+      <h1 id="scene-title">星际之环<span class="title-dot">.</span></h1>
+      <p id="scene-subtitle">让每一颗星，找到自己的轨道。</p>
+    </div>
+
+    <aside class="control-panel" id="controls" aria-label="宇宙控制台">
+      <div class="panel-heading"><div><span class="tiny-label">MAKE IT YOURS</span><h2>宇宙控制台</h2></div><button class="icon-button close-panel" id="close-panel" aria-label="收起控制台" title="收起控制台"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button></div>
+      <div class="control-section">
+        <div class="section-label">宇宙形态<span>01 — 03</span></div>
+        <div class="scene-options" role="group" aria-label="宇宙形态">
+          <button class="scene-option active" data-scene="ring" aria-pressed="true"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><ellipse cx="16" cy="16" rx="13" ry="5" transform="rotate(-30 16 16)" stroke="currentColor"/><circle cx="16" cy="16" r="6" stroke="currentColor"/></svg><span>星环</span></button>
+          <button class="scene-option" data-scene="galaxy" aria-pressed="false"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" aria-hidden="true"><path d="M17 16c3-5 11-4 10 2-1 9-19 10-22 1-4-12 17-19 23-9M15 16C12 21 4 20 5 14 6 5 24 4 27 13"/><circle cx="16" cy="16" r="2" fill="currentColor"/></svg><span>银河</span></button>
+          <button class="scene-option" data-scene="sphere" aria-pressed="false"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" aria-hidden="true"><circle cx="16" cy="16" r="11"/><ellipse cx="16" cy="16" rx="5" ry="11"/><path d="M6 11q10 5 20 0M6 21q10-5 20 0M5 16h22"/></svg><span>星团</span></button>
+        </div>
+      </div>
+      <div class="control-section sliders">
+        <label class="slider-label" for="particle-count">粒子数量<output id="count-value" for="particle-count">40,000</output></label>
+        <input id="particle-count" type="range" min="8000" max="80000" step="4000" value="40000" aria-label="粒子数量">
+        <div class="range-extents"><span>疏朗</span><span>浩瀚</span></div>
+        <label class="slider-label" for="speed">旋转速度<output id="speed-value" for="speed">0.35 ×</output></label>
+        <input id="speed" type="range" min="0" max="1.5" step="0.05" value="0.35" aria-label="旋转速度">
+        <label class="slider-label last-slider" for="glow">星光强度<output id="glow-value" for="glow">1.15</output></label>
+        <input id="glow" type="range" min="0.4" max="2.2" step="0.05" value="1.15" aria-label="星光强度">
+      </div>
+      <div class="control-section palette-section">
+        <div class="section-label">星河色调<span id="palette-name">冰川蓝</span></div>
+        <div class="palette-options" role="group" aria-label="星河色调">
+          <button class="palette-option active" data-palette="ice" aria-label="冰川蓝" aria-pressed="true" title="冰川蓝"><span class="swatch ice"></span></button>
+          <button class="palette-option" data-palette="violet" aria-label="星云紫" aria-pressed="false" title="星云紫"><span class="swatch violet"></span></button>
+          <button class="palette-option" data-palette="gold" aria-label="落日金" aria-pressed="false" title="落日金"><span class="swatch gold"></span></button>
+          <span class="palette-caption">给宇宙一点颜色</span>
+        </div>
+      </div>
+      <div class="gesture-section">
+        <div class="gesture-heading"><div><span class="gesture-title">手势控制</span><span class="gesture-privacy">画面隐藏 · 本机识别</span></div><button class="gesture-switch" id="gesture-toggle" role="switch" aria-checked="false" aria-label="启用手势控制"><span></span></button></div>
+        <p class="gesture-help" id="gesture-status" role="status" aria-live="polite">张掌散开 · 握拳聚合 · 捏合旋转</p>
+      </div>
+      <div class="panel-actions">
+        <button class="play-button" id="play-pause" aria-label="暂停动画" aria-pressed="false"><svg id="play-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4 3h3v10H4zm5 0h3v10H9z"/></svg><span id="play-label">暂停流转</span><kbd>空格</kbd></button>
+        <button class="reset-button" id="reset" aria-label="重置全部设置" title="重置全部设置"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 10a8 8 0 1 1 1 7M4 4v6h6"/></svg></button>
+      </div>
+      <div class="panel-footer"><span class="status-dot"></span><span id="renderer-label">WebGL 粒子引擎</span><span id="fps">— FPS</span></div>
+    </aside>
+    <button class="open-panel" id="open-panel" aria-label="打开宇宙控制台" aria-expanded="true" aria-controls="controls"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="3" fill="currentColor" stroke="none"/><circle cx="15" cy="17" r="3" fill="currentColor" stroke="none"/></svg><span>控制台</span></button>
+
+    <div class="scene-poetry" aria-hidden="true"><span class="poetry-line"></span><p>万千星尘，<br>因你而聚。</p><span class="poetry-en">A LITTLE UNIVERSE. ALL YOURS.</span></div>
+    <div class="interaction-hint" id="interaction-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><rect x="7" y="3" width="10" height="17" rx="5"/><path d="M12 6v4"/></svg><span class="desktop-hint">拖动旋转<span class="hint-dot">·</span>滚轮缩放<span class="hint-dot">·</span>双击释放星尘</span><span class="mobile-hint">拖动旋转 · 双指缩放 · 双击星尘</span></div>
+    <div class="gesture-hud" id="gesture-hud" hidden role="status" aria-live="polite"><span class="gesture-hud-dot"></span><span id="gesture-hud-label">将手放在摄像头前</span><button id="gesture-stop" aria-label="关闭手势控制与摄像头" title="关闭手势控制与摄像头">×</button></div>
+  </main>
+
+  <footer class="bottom-bar"><span>EXPERIMENT <span class="footer-number">001</span></span><span class="footer-center">写给浩瀚，也写给你。</span><span id="particle-stats">40,000 颗星 · 无限可能</span></footer>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div id="fallback-notice" class="fallback-notice" hidden>当前浏览器使用轻量粒子模式，建议用支持 WebGL 的浏览器体验完整效果。</div>
+</body>
+</html>
