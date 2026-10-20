@@ -1,6 +1,63 @@
+# Dependencies
 node_modules/
+.pnp/
+.pnp.*
+
+# Environment files and credentials
+.env
+.env.*
+!.env.example
+!.env.sample
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+id_rsa
+id_rsa.*
+id_ed25519
+id_ed25519.*
+credentials.json
+service-account*.json
+secrets*.json
+.secrets/
+.aws/
+
+# Build output, build caches, and test coverage
 dist/
+build/
+out/
+.next/
+.nuxt/
+.output/
+.cache/
+.parcel-cache/
+.turbo/
+.vite/
+.vercel/
+.netlify/
+coverage/
+.nyc_output/
+*.tsbuildinfo
+
+# Local browser profiles, verification artifacts, and archives
 .preview-browser/
 .qa/
 *.tar.gz
+*.tgz
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# OS and editor state
 .DS_Store
+Thumbs.db
+Desktop.ini
+.idea/
+.vscode/
